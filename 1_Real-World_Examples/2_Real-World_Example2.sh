@@ -22,7 +22,7 @@ Se analiza la grilla de greenspline hasta el eigenvalue $N"
 
 #	Region y proyeccion en UTM
 	INC=2000
-	Width=15c
+	Width=14c
 	PROJ=X${Width}/0
 	REGION=$(gmt info $Track -I$INC)
 	T=2000
@@ -53,8 +53,8 @@ Se analiza la grilla de greenspline hasta el eigenvalue $N"
 
 #	C. Grillar
 	#gmt greenspline tmp_resto_Track $REGION -I$INC -G$BATI1 -St0.5 -Z1 -V
-	
-#	BATI2 y BATI3 (Metodo nuevo con bad track)
+
+	#	BATI2 y BATI3 (Metodo nuevo con bad track)
 #	------------------------------------------
 #	B1. Filtrar
 	#gmt blockmedian $RESTO2 $Track $REGION -I$INC > tmp_resto
@@ -62,30 +62,28 @@ Se analiza la grilla de greenspline hasta el eigenvalue $N"
 #	B. Distancia vs Gradiente/Pendiente
 #	B2. Crear Bad track con XYZ
 	echo "Crear Bad track con XYZ"
-#	./XYZ $TRACK2 $TrackGradient
 	../Software/./XYZ $TRACK2 $TrackGradient
 
 	# Eigenvalue a analizar
 	# Grillar usando trackgrad original
-	gmt greenspline tmp_resto $REGION -I$INC -G$BATI2 -St0.5 -Z1 -V -A$TrackGradient+f2
+	#gmt greenspline tmp_resto $REGION -I$INC -G$BATI2 -St0.5 -Z1 -V -A$TrackGradient+f2
 
 	# Eigenvalue a analizar
 	# Grillar usando trackgrad original
-	gmt greenspline tmp_resto $REGION -I$INC -G$BATI3 -St0.5 -Z1 -V -A$TrackGradient+f2 -Cn${N}%
+	#gmt greenspline tmp_resto $REGION -I$INC -G$BATI3 -St0.5 -Z1 -V -A$TrackGradient+f2 -Cn${N}%
 
 # 	Make plot
 #	-----------------------------------------------------------------------------------------------------------
 gmt begin ${title}_${N} png
 gmt makecpt -Ctopo -T-7000/0
-	gmt subplot begin 2x2 $REGION -J$PROJ -Fs${Width} -Bxaf -Byaf+ap -Srl -Scb -A1+gwhite+jTR -M0.05c/0.6c
+	gmt subplot begin 2x2 $REGION -J$PROJ -Fs${Width} -Bxaf -Byaf+ap -Srl -Scb -M0.05c/0.6c #-A1+gwhite+jTR 
 		gmt basemap -B+t"Standard method with original data" -c
 		gmt grdimage $BATI0 -C -I
 		gmt grdcontour $BATI0 -C1000 -Wthinner
-		gmt plot $Track  -Sp -Gblack
-		gmt plot $RESTO2 -Sp -Gblack
-		gmt plot $TrackGradient -Sp -Gred
+		gmt plot $Track  -Sc0.1 -Gblack
+		gmt plot $RESTO2 -Sc0.1 -Gblack -l"Rest of the data"
+		gmt plot $TrackGradient -Sc0.1c -Gred -l"Bad Track"
 		gmt basemap -LjBL+o0.5c+w20000+l"m"
-		
 
 		gmt basemap -B+t"Standard method without \"Bad Track\"" -c
 		gmt grdimage $BATI1 -C -I
@@ -102,7 +100,7 @@ gmt makecpt -Ctopo -T-7000/0
 		gmt plot tmp_resto -Sp
 		gmt plot $TrackGradient -Sp -Gred
 
-		gmt basemap -B+t"New method with $N % eigenvalues" -c
+		gmt basemap -B+t"New method with $N% eigenvalues" -c
 		gmt grdimage $BATI3 -C -I
 		gmt grdcontour $BATI3 -C1000 -Wthinner
 		gmt plot tmp_resto  -Sp

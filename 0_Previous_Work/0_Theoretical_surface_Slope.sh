@@ -25,6 +25,9 @@ BATI2=Greenspline_resto_SlopeTrack.nc
 XYZ=tmp_xyz.txt
 Rest=tmp_resto.txt
 
+gmt set PS_COLOR_MODEL CMYK
+
+
 #	0. Create surface
 # 	-------------------------------------------------------------------------------------------
 # 	A. Increasing linearly in X and Y
@@ -74,10 +77,10 @@ gmt begin $(basename $0 .sh) png
 	gmt grdimage $BATI2 -JX$Width -BwSne+t"New Method"      -Cbatlow -Baf+e -Xa2w+0.4c
 
 	# 3. Top profile
-	domain=$(gmt info tracks.txt -I0/6 -i0,4)
-	gmt basemap $domain -JX24.4c/4c -Baf -BWesn -Y9.4c
+	domain=$(gmt info tmp_tracks.txt -I0/15 -i0,4)
+	gmt basemap $domain -JX24.4c/4c -Baf -BWesn -Yh+1.5c
 	gmt plot tmp_tracks.txt -Wblue   -i0,3 -l"Standard Method"
-	gmt plot tmp_tracks.txt -Wgreen  -i0,4 -l"New method"
+	gmt plot tmp_tracks.txt -Wgreen  -i0,4 -l"New Method"
 	gmt plot $Track -Sc0.1 -Gred -i0,2 -l"Original data"
 	gmt legend -DjBR+o0.1c -F+g235+pthin
 	gmt basemap -B+t"E-W Profile"
