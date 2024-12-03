@@ -1,23 +1,16 @@
 #!/usr/bin/env bash
 
-# Script para probar metodo para crear grillas con badtrack sobre una superficie teorica.
-# 
-# Pasos seguidos:
-# 0. Crear grilla teorica.
-# 1. Convertir grilla a tabla de datos
-# 2. Agregar error a un perfil.
-# 3. Regrillar datos
-# 4. Graficar resultados
+# Script to test the method on a synthetic surface.
 
 
-# Parametros de la grilla y variables
-# -----------------------------------
+# Parameter for the grid
+# -----------------------
 # Grid size
 #N=100
 N=20
 R=-$N/$N/-$N/$N
 
-# Sampling
+# Sampling Interval
 I=1
 #I=0.5
 #I=1
@@ -71,7 +64,7 @@ gmt set PS_COLOR_MODEL CMYK
 #	A. Extract data from grids BATI1 and BATI2
 	gmt grdtrack $Track -G$BATI1 -G$BATI2 > tmp_tracks.txt
 
-# B. Hacer figura
+# B. Make figure
 gmt begin $(basename $0 .sh) png
 
 	# 1. Original Grid
@@ -82,7 +75,7 @@ gmt begin $(basename $0 .sh) png
 	gmt plot -Sc0.07 -Gwhite $TrackGradient
 	gmt basemap -BWSne -Baf
 
-	# 2. Gids BATI1 y BATI2
+	# 2. Grids BATI1 and BATI2
 	gmt grdimage $BATI1 -JX$Width -BwSne+t"Standard Method" -Cbatlow -Baf+e -Xaw+0.2c
 	gmt grdimage $BATI2 -JX$Width -BwSne+t"New Method"      -Cbatlow -Baf+e -Xa2w+0.4c
 
